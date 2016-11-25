@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.mapper.TestMapper">
+	<resultMap type="com.naver.dto.TranslateDTO" id="TranslateDTO">
+		<result property="id" column="id" />
+		<result property="lang" column="lang" />
+		<result property="lang1" column="lang1" />
+		<result property="lang2" column="lang2" />
+		<result property="dicid" column="dicid" />
+		<result property="transid" column="transid" />
+		<result property="transtype" column="transtype" />
+		<result property="bottype" column="bottype" />
+		<result property="en" column="en" />
+		<result property="flag" column="flag" />
+		<result property="word" column="word" />
+		<result property="date" column="date" />
+		<result property="predate" column="predate" />
+		<result property="afterdate" column="afterdate" />
+		<result property="rw" column="rw" />
+		
+		
+		
+		</resultMap>
+
+		<!--테스트시 translate_tsy_tb 번역내역이 있는지 확인 -->
+  <select id="confirmIdWord" resultType="int">
+	SELECT 
+     	count(id) 
+	FROM translate_hsy_tb
+	WHERE
+   		usr_tb_id=#{usrid} AND usr_tb_bottype=#{bottype} AND flag=#{flag} 
+   </select> 	 
+		
+		<!--  문제출제  -->
+ 	<select id="sendProblem" resultType="java.util.HashMap">
+		SELECT dic_tb.id,dic_tb.lang1,dic_tb.lang2 
+				FROM translate_hsy_tb join dic_tb on translate_hsy_tb.dic_tb_id=dic_tb.id   
+				WHERE translate_hsy_tb.usr_tb_id=#{usrid}  AND translate_hsy_tb.usr_tb_bottype=#{bottype} AND translate_hsy_tb.flag=#{flag}
+				order BY RAND()    
+				LIMIT 1 
+	</select>
+	
+	<!-- test DB에 문제누적저장 -->
+ <insert id="addTest" parameterType="com.naver.dto.TranslateDTO">
+     INSERT INTO 
+     test_hsy_tb(usr_tb_id,date,bottype,question,rw)
+     VALUES(#{usrid},NOW(),#{bottype},#{question},'0')
+  </insert>
+  
+<!-- 단어테스트가 될때 flag값을 변화 -->
+	<update id="updateFlag">
+   	UPDATE 
+   		USR_TB
+   	SET
+   		flag=#{flag}
+   	WHERE
+   		id=#{usrid} AND bottype=#{bottype}
+   </update>
+   
+<!-- flag 확인 -->
+<select id="confirmFlag" resultType="int">
+   	SELECT 
+   		flag
+   	FROM USR_TB
+   	WHERE id=#{usrid} AND bottype=#{bottype} 
+ </select>     
+ 
+<!-- 정답여부 확인하고  -->
+ <select id="confirmAnswerR" resultType="String">
+		SELECT lang2
+	  FROM dic_tb
+   WHERE lang1=(SELECT lang1 
+										FROM test_hsy_tb join dic_tb on test_hsy_tb.question=dic_tb.lang1   
+										WHERE test_hsy_tb.usr_tb_id=#{usrid} AND dic_tb.bottype=#{bottype}
+									  order by  test_hsy_tb.date
+									  desc limit 1)
+	</select>
+    
+  <select id="confirmAnswerL" resultType="String">
+		SELECT lang1
+	  FROM dic_tb
+   WHERE lang2=(SELECT lang2 
+										FROM test_hsy_tb join dic_tb on test_hsy_tb.question=dic_tb.lang2   
+										WHERE test_hsy_tb.usr_tb_id=#{usrid} AND dic_tb.bottype=#{bottype}
+									  order by  test_hsy_tb.date
+									  desc limit 1)
+
+
+	</select> 
+
+<!--정답여부 업대이트  -->
+<update id="updateRw">
+		UPDATE test_hsy_tb 
+				SET rw=#{rw}
+				WHERE usr_tb_id=#{usrid} AND bottype=#{bottype}
+				order by  test_hsy_tb.date
+				DESC limit 1  
+</update>
+		
+		
+		
+		
+		
+		
+		</mapper>

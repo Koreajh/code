@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.mapper.CommandMapper">
+	<resultMap type="com.naver.dto.TranslateDTO" id="TranslateDTO">
+		<result property="id" column="id" />
+		<result property="lang" column="lang" />
+		<result property="lang1" column="lang1" />
+		<result property="lang2" column="lang2" />
+		<result property="dicid" column="dicid" />
+		<result property="transid" column="transid" />
+		<result property="transtype" column="transtype" />
+		<result property="bottype" column="bottype" />
+		<result property="en" column="en" />
+		<result property="flag" column="flag" />
+		<result property="word" column="word" />
+		<result property="date" column="date" />
+		<result property="predate" column="predate" />
+		<result property="afterdate" column="afterdate" />
+		
+		
+		</resultMap>
+
+
+
+<delete id="deleteDateWords">
+   	DELETE FROM  translate_hsy_tb  Using translate_hsy_tb join dic_tb
+   	WHERE translate_hsy_tb.usr_tb_id=#{usrid} AND translate_hsy_tb.date <![CDATA[<]]> date_add(date_format(now() ,'%Y-%m-%d'),interval -#{date} day) 
+          AND dic_tb.bottype=#{bottype}
+   </delete>
+   
+  
+ 		<delete id="deleteWords">
+   	DELETE FROM  translate_hsy_tb Using translate_hsy_tb join dic_tb on dic_tb.bottype=#{bottype} AND dic_tb.id=translate_hsy_tb.dic_tb_id
+   	WHERE translate_hsy_tb.usr_tb_id=#{usrid} AND dic_tb.lang1 =#{word} OR dic_tb.lang2 = #{word} 
+   </delete>
+   
+   <select id="selectPeriodWords" resultType="java.util.HashMap">
+   SELECT DATE(translate_hsy_tb.date) AS date,dic_tb.lang1,dic_tb.lang2 
+   FROM translate_hsy_tb join dic_tb on translate_hsy_tb.dic_tb_id=dic_tb.id 
+   WHERE translate_hsy_tb.usr_tb_id=#{usrid} AND DATE_FORMAT(date, '%Y-%m-%d') BETWEEN #{predate} AND #{afterdate} AND dic_tb.bottype=#{bottype}
+   ORDER BY date 
+   </select>
+   
+   <select id="selectWrongWords" resultType="java.util.HashMap">
+   SELECT DATE(test_hsy_tb.date) AS date,dic_tb.lang1,dic_tb.lang2 
+   FROM test_hsy_tb join dic_tb on test_hsy_tb.question=dic_tb.lang1 or test_hsy_tb.question=dic_tb.lang2
+   WHERE test_hsy_tb.usr_tb_id=#{usrid} AND DATE_FORMAT(date, '%Y-%m-%d') BETWEEN #{predate} AND #{afterdate} AND dic_tb.bottype=#{bottype} AND test_hsy_tb.rw='1'
+   ORDER BY date 
+   </select>
+   
+
+
+</mapper>

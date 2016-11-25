@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.mapper.TranslateMapper">
+	<resultMap type="com.naver.dto.TranslateDTO" id="TranslateDTO">
+		<result property="id" column="id" />
+		<result property="lang" column="lang" />
+		<result property="lang1" column="lang1" />
+		<result property="lang2" column="lang2" />
+		<result property="dicid" column="dicid" />
+		<result property="transid" column="transid" />
+		<result property="transtype" column="transtype" />
+		<result property="bottype" column="bottype" />
+		<result property="en" column="en" />
+		<result property="flag" column="flag" />
+		<result property="word" column="word" />
+		<result property="date" column="date" />
+		<result property="predate" column="predate" />
+		<result property="afterdate" column="afterdate" />
+		
+		
+		</resultMap>
+	
+<!-- usr_tb에 아이디가 저장되어 있나 확인하고 없으면 추가 -->
+	<insert id="confirmId" >
+	INSERT INTO USR_TB(id,bottype) 
+	SELECT * FROM (SELECT #{id},#{bottype})AS tmp 
+	WHERE NOT EXISTS (SELECT id FROM USR_TB WHERE id = #{id} AND bottype= #{bottype}) 
+	LIMIT 1
+	</insert>
+	
+	
+  <!-- dic테이블에 저장된 데이터가 있나 확인 -->
+  <select id="confirmDicL" resultType="int">
+	SELECT 
+     	count(id) 
+	FROM DIC_TB
+	WHERE
+   		bottype = #{bottype} AND lang1=#{lang} 
+   </select> 	 
+ 
+  <select id="confirmDicR" resultType="int">
+	SELECT 
+     	count(id) 
+	FROM DIC_TB
+	WHERE
+   		bottype = #{bottype} AND lang2=#{lang}  
+   </select> 	 
+ 
+  <!-- 기존에 dic에 있던 번역결과를 select-->
+ 	<select id="selectDicL" resultType="java.util.HashMap">
+		SELECT lang2,id FROM dic_tb
+		WHERE bottype=#{bottype} AND lang1=#{lang}
+ 	</select>
+
+ 	<select id="selectDicR" resultType="java.util.HashMap">
+		SELECT lang1,id FROM dic_tb
+		WHERE bottype=#{bottype} AND lang2=#{lang}
+ 	</select>
+ 
+ <!-- translate_tsy_tb에 번역한 내역이 있는지 확인 -->
+  <select id="confirmTrans" resultType="int">
+	SELECT 
+     	count(id) 
+	FROM translate_hsy_tb
+	WHERE
+   		usr_tb_id=#{usrid} AND dic_tb_id=#{dicid} AND flag=#{flag} 
+   </select> 
+   
+  
+ 	 
+  
+  <!-- dic_tb에 저장 -->
+ <insert id="addDic" parameterType="com.naver.dto.TranslateDTO">
+     INSERT INTO 
+     	dic_tb(lang1,lang2,bottype)
+     VALUES(#{lang1},#{lang2},#{bottype})
+  </insert>
+ 
+  
+  
+ <!-- translate_tsy_tb에 저장 -->
+ <insert id="addTranslate" parameterType="com.naver.dto.TranslateDTO">
+     INSERT INTO 
+     	translate_hsy_tb(usr_tb_id,dic_tb_id, usr_tb_bottype,flag,date)
+     VALUES(#{usrid},#{dicid},#{bottype},#{flag},NOW())
+  </insert>
+ 
+ 
+   
+	
+</mapper>
