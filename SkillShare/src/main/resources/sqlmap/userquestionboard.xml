@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	 
+<mapper namespace="com.fnsvalue.skillshare.mapper.QuestionMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Question" id="Question">
+		<result property="ask_no_pk" column="ask_no_pk" />
+		<result property="user_tb_user_id_pk" column="user_tb_user_id_pk" />
+		<result property="ask_tit" column="ask_tit" />
+		<result property="ask_con" column="ask_con" />
+		<result property="ask_dt" column="ask_dt" />
+	</resultMap>
+<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+		<result property="user_file_nm" column="user_file_nm"/>
+	</resultMap>
+	
+	
+	<select id="countPaging" resultType="int">
+     SELECT 
+     	count(ASK_NO_PK) 
+     FROM SKILLSHARE_ASK_TB
+  </select>   
+	 
+   <insert id="QuestionAdd" parameterType="com.fnsvalue.skillshare.dto.Question">
+     INSERT INTO 
+     	SKILLSHARE_ASK_TB(USER_TB_USER_ID_PK, ASK_TIT, ASK_CON)
+     VALUES(#{user_tb_user_id_pk}, #{ask_tit}, #{ask_con})
+   </insert>
+   
+   <select id="QuestionView" resultMap="Question">
+     SELECT 
+     ASK_NO_PK,USER_TB_USER_ID_PK,ASK_TIT,ASK_DT 
+     FROM SKILLSHARE_ASK_TB
+     ORDER BY ASK_NO_PK desc
+     limit #{page_start}, #{perpage_num}
+   </select>
+   
+    <select id="QuestionDetailView" resultMap="Question">
+     SELECT 
+     ASK_NO_PK, USER_TB_USER_ID_PK, ASK_TIT, ASK_CON, ASK_DT 
+     FROM SKILLSHARE_ASK_TB
+     WHERE
+     	ASK_NO_PK=#{ask_no_pk}
+     	
+   </select>
+   
+   <delete id="QuestionDelete">
+   	DELETE
+   	FROM SKILLSHARE_ASK_TB
+    WHERE
+    	ASK_NO_PK=#{ask_no_pk}
+   	</delete>
+   	
+   	<update id="QuestionChange">
+   	UPDATE 
+   		SKILLSHARE_ASK_TB
+   	SET
+   		ASK_TIT=#{ask_tit}, ASK_CON=#{ask_con}
+   	WHERE
+   		ASK_NO_PK=#{ask_no_pk}
+   		
+   </update>
+   
+   <select id="viewOk" resultType="int">
+   SELECT
+   		ACCESS
+   FROM SKILLSHARE_USER_TB
+   WHERE
+   		USER_ID_PK=#{user_id_pk}
+   
+   </select>
+   
+   <select id="dashboardView" resultMap="Question">
+     SELECT 
+     ASK_NO_PK,USER_TB_USER_ID_PK,ASK_TIT,ASK_DT 
+     FROM SKILLSHARE_ASK_TB
+     ORDER BY ASK_NO_PK desc
+     limit 7
+   </select>
+   
+   
+</mapper>

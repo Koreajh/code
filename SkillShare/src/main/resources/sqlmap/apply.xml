@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.ApplyMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Apply" id="Apply">
+		<result property="apply_no_pk" column="apply_no_pk" />
+		<result property="user_tb_user_id_pk" column="user_tb_user_id_pk" />
+		<result property="board_tb_board_no_pk" column="board_tb_board_no_pk" />
+		<result property="apply_dt" column="apply_dt" />
+		<result property="apply_st" column="apply_st" />
+		
+	</resultMap>
+	
+	<select id="applyCount" resultType="int">
+ 	SELECT
+  		count(*)
+ 		FROM SKILLSHARE_APPLY_TB
+		 WHERE BOARD_TB_BOARD_NO_PK=#{board_tb_board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+  </select>    
+   	
+	
+	<select id="countPaging" resultType="int">
+     SELECT 
+     	count(APPLY_NO_PK) 
+     FROM SKILLSHARE_APPLY_TB 
+     </select>
+   	<select id="applyGetId" resultType="java.lang.String">
+	SELECT 
+     	APPLY_NO_PK 
+	FROM SKILLSHARE_APPLY_TB
+	WHERE
+   		BOARD_TB_BOARD_NO_PK=#{board_tb_board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk} AND APPLY_ST = '0'
+     	 
+     </select>
+   <insert id="applyAdd" parameterType="com.fnsvalue.skillshare.dto.Apply">
+     INSERT INTO 
+     	SKILLSHARE_APPLY_TB(USER_TB_USER_ID_PK, BOARD_TB_BOARD_NO_PK, APPLY_ST)
+     VALUES(#{user_tb_user_id_pk}, #{board_tb_board_no_pk}, "0")
+   </insert>
+   
+   <select id="applyView" resultMap="Apply">
+   SELECT
+   		APPLY_NO_PK, USER_TB_USER_ID_PK, BOARD_TB_BOARD_NO_PK, APPLY_DT, APPLY_ST
+   FROM SKILLSHARE_APPLY_TB
+   WHERE
+   		BOARD_TB_BOARD_NO_PK=#{board_tb_board_no_pk}
+   ORDER BY APPLY_DT desc
+   
+   </select>
+   
+   
+   	<update id="applyAgree">
+   	UPDATE 
+   		SKILLSHARE_APPLY_TB
+   	SET
+   		APPLY_ST="1"
+   	WHERE
+   		APPLY_NO_PK=#{apply_no_pk} 
+   			
+   </update>
+   
+   <update id="applyDisAgree">
+   	UPDATE 
+   		SKILLSHARE_APPLY_TB
+   	SET
+   		APPLY_ST="2"
+   	WHERE
+   		APPLY_NO_PK=#{apply_no_pk} 
+   			
+   </update>
+   
+   <delete id="applyAgreeDelete">
+   	DELETE
+   	FROM SKILLSHARE_APPLY_TB
+    WHERE
+    	APPLY_NO_PK=#{apply_no_pk} 
+   	</delete>
+   
+   <delete id="applyDelete">
+   	DELETE
+   	FROM SKILLSHARE_APPLY_TB
+   	WHERE
+   		BOARD_TB_BOARD_NO_PK=#{board_tb_board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+   	</delete>
+   	
+   	<select id="applyPerView" resultMap="Apply">
+   SELECT
+   		APPLY_NO_PK, USER_TB_USER_ID_PK, BOARD_TB_BOARD_NO_PK, APPLY_DT, APPLY_ST
+   FROM SKILLSHARE_APPLY_TB
+   WHERE
+   		USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+   ORDER BY APPLY_DT desc
+   limit #{page_start}, #{perpage_num}
+   
+   </select>
+  
+   
+   
+</mapper>

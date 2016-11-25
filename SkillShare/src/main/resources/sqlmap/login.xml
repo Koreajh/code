@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.LoginMapper">
+
+	<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+		<result property="loginlog_user_ip" column="loginlog_user_ip"/>
+		<result property="loginlog_dt" column="loginlog_dt"/>
+		<result property="user_file_nm" column="user_file_nm"/>
+		<result property="acclog_page" column="acclog_page"/>
+		<result property="acclog_inf" column="acclog_inf"/>
+		<result property="acclog_sq_pk" column="acclog_sq_pk"/>
+		
+	</resultMap>
+	
+	<select id="findByUserIdAndPassword" resultMap="User">
+     SELECT 
+     	USER_ID_PK, USER_PW, USER_NM, USER_EM, ACCESS, USER_FILE_NM
+     FROM SKILLSHARE_USER_TB 
+     WHERE 
+     	USER_ID_PK=#{user_id_pk}
+     	AND USER_PW=#{user_pw}
+	</select>
+	<select id="getUsersByID" resultMap="User">
+     SELECT 
+     	USER_ID_PK, USER_PW
+     FROM SKILLSHARE_USER_TB 
+     WHERE 
+     	USER_ID_PK=#{user_id_pk}
+	</select>
+	
+	<insert id="checkLogin" parameterType="com.fnsvalue.skillshare.dto.User" >
+     INSERT INTO 
+     	SKILLSHARE_LOGINLOG_TB(LOGINLOG_USER_IP, LOGINLOG_USER_ID)
+     VALUES(#{loginlog_user_ip}, #{user_id_pk})
+   </insert>
+   
+   <insert id="checkDetail" parameterType="com.fnsvalue.skillshare.dto.User" >
+     INSERT INTO  
+     	SKILLSHARE_ACCLOG_TB(ACCLOG_USER_ID,ACCLOG_SQ_PK,ACCLOG_USER_IP,ACCLOG_PAGE,ACCLOG_INF)
+     VALUES(#{user_id_pk},#{acclog_sq_pk},#{loginlog_user_ip},#{acclog_page},#{acclog_inf})
+   </insert>
+   
+   
+	
+	
+</mapper>

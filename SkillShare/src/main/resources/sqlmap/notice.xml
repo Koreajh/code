@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.NoticeMapper">
+	
+	<resultMap type="com.fnsvalue.skillshare.dto.Board" id="Board">
+		<result property="board_no_pk" column="board_no_pk" />
+		<result property="user_tb_user_id_pk" column="user_tb_user_id_pk" />
+		<result property="board_tit" column="board_tit" />
+		<result property="board_con" column="board_con" />
+		<result property="board_dt" column="board_dt" />
+		<result property="my_sk" column="my_sk" />
+		<result property="want_sk" column="want_sk" />
+		<result property="board_dur" column="board_dur" />
+		<result property="board_fl" column="board_fl" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+	</resultMap>
+
+   <select id="NoticeView" resultMap="Board">
+     SELECT 
+     	 BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, BOARD_DT, READ_CNT
+     FROM SKILLSHARE_BOARD_TB
+     WHERE BOARD_FL="1"
+     ORDER BY BOARD_NO_PK desc
+     limit #{page_start},#{perpage_num}     
+   </select>
+   
+   <insert id="noticeAdd">
+     INSERT INTO 
+     	SKILLSHARE_BOARD_TB(BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, MY_SK, WANT_SK, BOARD_DUR, BOARD_FL)
+     VALUES(#{board_no_pk}, #{user_tb_user_id_pk}, #{board_tit}, #{board_con},"-","-","-", "1")
+   </insert>
+   
+   <update id="noticeChange">
+   	UPDATE 
+   		SKILLSHARE_BOARD_TB
+   	SET
+   		BOARD_TIT=#{board_tit}, BOARD_CON=#{board_con}
+   	WHERE
+   		BOARD_NO_PK=#{board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+    </update>
+    
+    <select id="countPaging" resultType="int">
+     SELECT 
+     	count(BOARD_NO_PK) 
+     FROM SKILLSHARE_BOARD_TB
+     WHERE BOARD_FL=1 
+       </select>
+</mapper>

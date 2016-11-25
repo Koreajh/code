@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com/DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="login">
+   <typeAlias alias="user" type="com.fnsvalue.skillshare.dto.User"/>
+   
+   <select id="selectLoginUser" resultClass="user">
+     select user_id_pk, user_pw, user_nm, user_em from USER_TB where user_id_pk=#user_id_pk# and user_pw=#user_pw#
+   </select>
+</sqlMap>

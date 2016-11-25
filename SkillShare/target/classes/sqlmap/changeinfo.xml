@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fnsvalue.skillshare.mapper.ChangeInfoMapper">
+
+	<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+		<result property="user_file_nm" column="user_file_nm"/>
+	</resultMap>
+	
+   <update id="changeinfoUser">
+   	UPDATE 
+   		SKILLSHARE_USER_TB
+   	SET
+   		USER_PW=#{user_pw}, USER_EM=#{user_em}, USER_NM=#{user_nm}, CHANGE_DT=NOW() , USER_FILE_NM=#{user_file_nm}
+   	WHERE
+   		USER_ID_PK=#{user_id_pk}
+   		
+   			
+   </update>
+   
+</mapper>

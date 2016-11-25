@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.BoardMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Board" id="Board">
+		<result property="board_no_pk" column="board_no_pk" />
+		<result property="user_tb_user_id_pk" column="user_tb_user_id_pk" />
+		<result property="board_tit" column="board_tit" />
+		<result property="board_con" column="board_con" />
+		<result property="board_dt" column="board_dt" />
+		<result property="my_sk" column="my_sk" />
+		<result property="want_sk" column="want_sk" />
+		<result property="read_cnt" column="read_cnt" />
+		<result property="board_dur" column="board_dur" />
+		<result property="board_fl" column="board_fl" />
+		<result property="report_id" column="report_id" />
+		<result property="report_rs" column="report_rs" />
+		<result property="report_con" column="report_con" />
+		
+	</resultMap>
+<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+		<result property="user_file_nm" column="user_file_nm"/>
+	</resultMap>
+
+	
+	
+	<select id="countPaging" resultType="int">
+     SELECT 
+     	count(BOARD_NO_PK) 
+     FROM SKILLSHARE_BOARD_TB 
+     </select>
+
+   <select id="viewOk" resultType="int">
+   SELECT
+   		ACCESS
+   FROM SKILLSHARE_USER_TB
+   WHERE
+   		USER_ID_PK=#{user_id_pk}
+   
+   </select>
+   
+   
+   
+   <insert id="boardAdd" parameterType="com.fnsvalue.skillshare.dto.Board">
+     INSERT INTO 
+     	SKILLSHARE_BOARD_TB(BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, MY_SK, WANT_SK, BOARD_DUR, BOARD_FL)
+     VALUES(#{board_no_pk}, #{user_tb_user_id_pk}, #{board_tit}, #{board_con}, #{my_sk}, #{want_sk}, #{board_dur}, "0")
+   </insert>
+   
+   <select id="boardView" resultMap="Board">
+   SELECT
+   		BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, BOARD_DT, MY_SK, WANT_SK, BOARD_DUR, READ_CNT
+   FROM SKILLSHARE_BOARD_TB
+   ORDER BY BOARD_FL desc, BOARD_NO_PK desc
+   limit #{page_start}, #{perpage_num}
+   </select>
+   
+   <select id="boardDetails" resultMap="Board">
+   SELECT
+   		BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, BOARD_DT, MY_SK, WANT_SK, BOARD_DUR, BOARD_FL
+   FROM SKILLSHARE_BOARD_TB
+   WHERE
+   		BOARD_NO_PK=#{board_no_pk}
+   </select>
+   
+   <delete id="boardDelete" >
+   	DELETE
+   	FROM SKILLSHARE_BOARD_TB
+   	WHERE
+   		BOARD_NO_PK=#{board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+   	</delete>
+   	
+   	 <insert id="reportAdd" parameterType="com.fnsvalue.skillshare.dto.Board">
+     INSERT INTO 
+     	SKILLSHARE_REPORT_TB(REPORT_NUM,REPORT_ID,REPORT_RS,REPORT_CON)
+     VALUES(#{board_no_pk},#{report_id}, #{report_rs}, #{report_con})
+   </insert>
+   
+   	<select id="reportCheck" resultType="int">
+ 	SELECT
+  		count(*)
+ 		FROM 
+ 			SKILLSHARE_REPORT_TB
+		 WHERE  
+		 	REPORT_NUM=#{board_no_pk}
+ </select>    
+   	
+   	
+   	<update id="cntPlus">
+   	UPDATE 
+   		SKILLSHARE_BOARD_TB
+   	SET
+   		READ_CNT=READ_CNT+1
+   	WHERE
+   		BOARD_NO_PK=#{board_no_pk}
+   			
+   </update>
+   
+   		
+   	<update id="boardChange">
+   	UPDATE 
+   		SKILLSHARE_BOARD_TB
+   	SET
+   		BOARD_TIT=#{board_tit}, BOARD_CON=#{board_con}, MY_SK=#{my_sk}, WANT_SK=#{want_sk}, BOARD_DUR=#{board_dur}
+   	WHERE
+   		BOARD_NO_PK=#{board_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+   			
+   </update>
+   
+   <select id="dashboardView" resultMap="Board">
+   SELECT
+   		BOARD_NO_PK, USER_TB_USER_ID_PK, BOARD_TIT, BOARD_CON, BOARD_DT, MY_SK, WANT_SK, BOARD_DUR, READ_CNT
+   FROM SKILLSHARE_BOARD_TB
+   ORDER BY BOARD_FL desc, BOARD_NO_PK desc
+   limit 7
+   </select>
+   
+   <select id="perView" resultMap="Board">
+   SELECT
+   		BOARD_NO_PK, USER_TB_USER_ID_PK
+   FROM SKILLSHARE_BOARD_TB
+   WHERE
+   		USER_TB_USER_ID_PK=#{user_tb_user_id_pk}
+   ORDER BY BOARD_NO_PK desc
+   limit 1
+   </select>
+   
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.RootManagerMapper">
+
+	<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+	</resultMap>
+   <select id="UserView" resultMap="User">
+     SELECT 
+     	 USER_ID_PK, USER_PW, USER_NM, USER_EM, CREATE_DT, CHANGE_DT, ACCESS 
+     FROM SKILLSHARE_USER_TB
+     limit #{page_start},#{perpage_num}     
+   </select> 
+   
+   <select id="countPaging" resultType="int">
+     SELECT 
+     	count(USER_ID_PK) 
+     FROM SKILLSHARE_USER_TB 
+       </select>
+       
+       
+   <select id="findByUserIdAndPassword" resultMap="User">
+     SELECT 
+     	USER_ID_PK, USER_PW, USER_NM, USER_EM, ACCESS,USER_FILE_NM
+     FROM SKILLSHARE_USER_TB 
+     WHERE 
+     	USER_ID_PK=#{user_id_pk}
+     	AND USER_PW=#{user_pw}
+	</select>
+	
+	    
+       
+</mapper>

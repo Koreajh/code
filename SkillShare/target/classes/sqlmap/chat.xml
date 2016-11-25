@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.ChatMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Chat" id="Chat">
+		<result property="chat_sq_pk" column="chat_sq_pk" />
+		<result property="chat_from" column="chat_from" />
+		<result property="chat_to" column="chat_to" />
+		<result property="chat_msg" column="chat_msg" />
+		<result property="chat_dt" column="chat_dt" />
+		<result property="chat_st" column="chat_st" />
+	</resultMap>
+
+   <insert id="Chatadd" parameterType="com.fnsvalue.skillshare.dto.Chat">
+     INSERT INTO 
+     	SKILLSHARE_CHAT_TB(CHAT_FROM, CHAT_TO, CHAT_MSG, CHAT_DT, CHAT_ST)
+     VALUES(#{chat_from}, #{chat_to}, #{chat_msg}, #{chat_dt}, "0")
+     
+   </insert>
+   
+   <select id="Chatview" resultType="java.util.HashMap">
+   SELECT
+   		CHAT_FROM, CHAT_TO, CHAT_MSG, CHAT_DT, CHAT_ST
+   FROM SKILLSHARE_CHAT_TB
+   WHERE
+   		(CHAT_FROM=#{chat_from} AND CHAT_TO=#{chat_to}) OR (CHAT_FROM=#{chat_to} AND CHAT_TO=#{chat_from})
+   </select>
+   <select id="Chatupdate" parameterType="com.fnsvalue.skillshare.dto.Chat">
+   UPDATE 
+   		SKILLSHARE_CHAT_TB
+   SET
+   		CHAT_ST = '1'
+   WHERE
+   		(CHAT_FROM=#{chat_from} AND CHAT_TO=#{chat_to}) and (CHAT_ST='0')
+   </select>
+   <select id="Chatcount" resultType="Integer">
+   SELECT 
+   		count(*) as COUNT
+   FROM
+   		SKILLSHARE_CHAT_TB
+   WHERE
+   		(CHAT_FROM=#{chat_from} AND CHAT_TO=#{chat_to}) and (CHAT_ST='0')
+   </select>
+   
+</mapper>

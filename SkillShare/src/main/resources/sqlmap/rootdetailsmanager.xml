@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	 
+<mapper namespace="com.fnsvalue.skillshare.mapper.RootDetailMapper">
+
+	<resultMap type="com.fnsvalue.skillshare.dto.User" id="User">
+		<result property="user_id_pk" column="user_id_pk" />
+		<result property="loginlog_user_id" column="loginlog_user_id" />
+		<result property="user_pw" column="user_pw" />
+		<result property="user_nm" column="user_nm" />
+		<result property="user_em" column="user_em" />
+		<result property="access" column="access" />
+		<result property="create_dt" column="create_dt" />
+		<result property="change_dt" column="change_dt" />
+		<result property="page" column="page" />
+		<result property="perPageNum" column="perPageNum" />
+		<result property="user_out_rs" column="user_out_rs" />
+		<result property="user_out_dt" column="user_out_dt" />
+	</resultMap>
+	 
+   <select id="UserDetailsView" resultMap="User">
+     SELECT 
+     	 USER_ID_PK, USER_PW, USER_NM, USER_EM, CREATE_DT, CHANGE_DT, ACCESS 
+     FROM SKILLSHARE_USER_TB 
+     WHERE
+   		USER_ID_PK=#{user_id_pk}
+   		    
+   </select>
+   
+   <update id="UserDelete">
+   	UPDATE
+   		SKILLSHARE_USER_TB
+   	SET
+   		ACCESS="3"
+   	WHERE
+   		USER_ID_PK=#{user_id_pk}	
+   	</update>
+   	
+   	<update id="UserBan">
+   	UPDATE
+   		SKILLSHARE_USER_TB
+   	SET
+   		ACCESS="2"
+   	WHERE
+   		USER_ID_PK=#{user_id_pk}	
+   	</update>
+   	
+   	
+   	<update id="UserBanCancel">
+   	UPDATE
+   		SKILLSHARE_USER_TB
+   	SET
+   		ACCESS="0"
+   	WHERE
+   		USER_ID_PK=#{user_id_pk}	
+   	</update>
+   	
+   
+   	
+   	<insert id="insertOutMem" parameterType="com.fnsvalue.skillshare.dto.User" >
+     INSERT INTO 
+     	SKILLSHARE_OUTUSER_TB(OUTUSER_ID,OUTUSER_RS)
+     VALUES(#{user_id_pk},#{user_out_rs})
+   </insert>
+   	
+   	
+   		 		
+   	<select id="checkLoginView" resultMap="User" >
+     SELECT
+     	LOGINLOG_USER_ID,LOGINLOG_USER_IP,LOGINLOG_DT 
+     FROM SKILLSHARE_LOGINLOG_TB
+     WHERE
+     	LOGINLOG_USER_ID=#{user_id_pk}
+     ORDER BY LOGINLOG_DT desc
+     limit #{page_start}, #{perpage_num}
+   
+   	
+    </select>
+    
+    
+    <select id="checkLogDetailView" resultMap="User" >
+     SELECT
+     	ACCLOG_USER_ID,ACCLOG_USER_IP,ACCLOG_PAGE,ACCLOG_INF,ACCLOG_DT 
+     FROM SKILLSHARE_ACCLOG_TB
+     WHERE
+     	ACCLOG_USER_ID=#{user_id_pk}
+     ORDER BY ACCLOG_DT desc
+     limit #{page_start}, #{perpage_num}
+   
+    </select>
+    
+   
+   <select id="countLogPaging" parameterType="com.fnsvalue.skillshare.dto.User" resultType="int">
+     SELECT 
+     	count(ACCLOG_SQ_PK) 
+     FROM SKILLSHARE_ACCLOG_TB
+     WHERE 
+   		  	ACCLOG_USER_ID=#{user_id_pk}
+   </select>
+   
+   <select id="countLogDetailPaging" parameterType="com.fnsvalue.skillshare.dto.User" resultType="int">
+     SELECT 
+     	count(LOGINLOG_TB_SQ_PK) 
+     FROM SKILLSHARE_LOGINLOG_TB
+     WHERE 
+   		  	LOGINLOG_USER_ID=#{user_id_pk}
+   </select>
+   
+    
+   
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <settings useStatementNamespaces="true"/>
+    
+    <sqlMap resource="sqlmap/login.xml"/>
+    <sqlMap resource="sqlmap/Join.xml"/>
+    <sqlMap resource="sqlmap/changeinfo.xml"/>
+    <sqlMap resource="sqlmap/rootmanager.xml"/>
+    <sqlMap resource="sqlmap/rootdetailsmanager.xml"/>
+    <sqlMap resource="sqlmap/board.xml"/>
+    <sqlMap resource="sqlmap/countpaging.xml"/>
+    <sqlMap resource="sqlmap/notice.xml"/>
+    <sqlMap resource="sqlmap/noticedetail.xml"/>
+    <sqlMap resource="sqlmap/userquestionboard.xml"/>
+ 	<sqlMap resource="sqlmap/apply.xml"/>
+    <sqlMap resource="sqlmap/comment.xml"/>
+    
+</sqlMapConfig>

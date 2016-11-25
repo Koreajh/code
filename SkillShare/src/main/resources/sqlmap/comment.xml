@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.CommentMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Comment" id="Comment">
+		<result property="comment_no_pk" column="comment_no_pk" />
+		<result property="user_tb_user_id_pk" column="user_tb_user_id_pk" />
+		<result property="ask_tb_ask_no_pk" column="ask_tb_ask_no_pk" />
+		<result property="comment_con" column="comment_con" />
+		<result property="comment_dt" column="comment_dt" />
+	</resultMap>
+      
+   <select id="commentList" resultMap="Comment">
+   SELECT
+   		COMMENT_NO_PK, USER_TB_USER_ID_PK, ASK_TB_ASK_NO_PK, COMMENT_CON, COMMENT_DT
+   FROM SKILLSHARE_COMMENT_TB
+   WHERE ASK_TB_ASK_NO_PK = #{ask_tb_ask_no_pk}
+   ORDER BY COMMENT_NO_PK desc
+   </select>
+   
+   <insert id="commentCreate">
+     INSERT INTO 
+     	SKILLSHARE_COMMENT_TB(USER_TB_USER_ID_PK, ASK_TB_ASK_NO_PK, COMMENT_CON)
+     VALUES(#{user_tb_user_id_pk}, #{ask_tb_ask_no_pk}, #{comment_con})
+   </insert>
+
+   
+   <update id="commentUpdate">
+    UPDATE 
+   		SKILLSHARE_COMMENT_TB
+   	SET
+   		COMMENT_CON=#{comment_con}
+   	WHERE
+   		COMMENT_NO_PK=#{comment_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk} AND ASK_TB_ASK_NO_PK=#{ask_tb_ask_no_pk}
+   </update>
+   
+   <delete id="commentDelete" >
+   	DELETE
+   	FROM SKILLSHARE_COMMENT_TB
+   	WHERE
+   		COMMENT_NO_PK=#{comment_no_pk} AND USER_TB_USER_ID_PK=#{user_tb_user_id_pk} AND ASK_TB_ASK_NO_PK=#{ask_tb_ask_no_pk}
+   	</delete>
+   
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.NotifyMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.Notify" id="Notify">
+		<result property="notify_sq_pk" column="notify_sq_pk" />
+		<result property="notify_from_id" column="notify_from_id" />
+		<result property="notify_to_id" column="notify_to_id" />
+		<result property="notify_con_fst" column="notify_con_fst" />
+		<result property="notify_con_scd" column="notify_con_scd" />
+		<result property="notify_dt" column="notify_dt" />
+	</resultMap>
+
+   <insert id="notifyadd" parameterType="com.fnsvalue.skillshare.dto.Notify">
+     INSERT INTO 
+     	SKILLSHARE_NOTIFY_TB(NOTIFY_FROM_ID, NOTIFY_TO_ID, NOTIFY_CON_FST, NOTIFY_CON_SCD, NOTIFY_DT)
+     VALUES(#{notify_from_id}, #{notify_to_id}, #{notify_con_fst}, #{notify_con_scd}, #{notify_dt})
+   </insert>
+   
+   <select id="notifyview" resultType="java.util.HashMap">
+   SELECT
+   		NOTIFY_FROM_ID, NOTIFY_TO_ID, NOTIFY_CON_FST, NOTIFY_CON_SCD, NOTIFY_DT
+   FROM SKILLSHARE_NOTIFY_TB
+   WHERE
+   		NOTIFY_TO_ID = #{notify_to_id} AND NOTIFY_ST=0
+   		ORDER BY NOTIFY_SQ_PK desc
+   </select>
+   
+   	<update id="notifystupdate">
+   	UPDATE 
+   		SKILLSHARE_NOTIFY_TB
+   	SET
+   		NOTIFY_ST=1
+   	WHERE
+   		NOTIFY_FROM_ID= #{notify_from_id} AND NOTIFY_TO_ID=#{notify_to_id} AND NOTIFY_CON_FST= #{notify_con_fst}
+   			
+   </update>
+
+</mapper>

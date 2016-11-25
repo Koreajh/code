@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fnsvalue.skillshare.mapper.ReportNotifyMapper">
+	<resultMap type="com.fnsvalue.skillshare.dto.ReportNotify" id="ReportNotify">
+		<result property="reportnotify_sq_pk" column="reportnotify_sq_pk" />
+		<result property="reportnotify_to" column="reportnotify_to" />
+		<result property="reportnotify_board_no" column="reportnotify_board_no" />
+		<result property="reportnotify_board_user" column="reportnotify_board_user" />
+		<result property="reportnotify_cnt" column="reportnotify_cnt" />
+		<result property="reportnotify_dt" column="reportnotify_dt" />
+	</resultMap>
+
+   <insert id="reportnotifyadd" parameterType="com.fnsvalue.skillshare.dto.ReportNotify">
+     INSERT INTO 
+     
+     	SKILLSHARE_REPORTNOTIFY_TB(REPORTNOTIFY_TO, REPORTNOTIFY_BOARD_NO, REPORTNOTIFY_BOARD_USER, REPORTNOTIFY_CNT, REPORTNOTIFY_DT)
+     	
+     VALUES(#{reportnotify_to}, #{reportnotify_board_no}, #{reportnotify_board_user}, #{reportnotify_cnt}, #{"reportnotify_dt"})
+   </insert>
+   
+
+</mapper>
